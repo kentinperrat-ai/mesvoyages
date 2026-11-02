@@ -35,14 +35,21 @@ class AccueilController extends AbstractController {
     public function index(): Response {
         return $this->render("pages/accueil.html.twig");
     }
-
-    #[Route('/voyages', name: 'voyages')]
-    public function voyages(): Response
-    {
-        $visites = $this->repository->findAll();
-        
-        return $this->render('pages/voyages.html.twig', [
-            'visites' => $visites
-        ]);
-    }
+    
+   #[Route('/voyages', name: 'voyages')]
+   public function voyages() : Response
+   {
+    $visites = $this->repository->findAllOrderBy('datecreation', 'DESC');
+    
+    return $this->render("pages/voyages.html.twig", [
+        'visites' => $visites
+    ]);
+   }
+   #[Route('/voyages/tri/{champ}/{ordre}', name: 'voyages.sort')]
+   public function sort($champ, $ordre): Response{
+       $visites = $this->repository->findAllOrderBy($champ, $ordre);
+       return $this->render("pages/voyages.html.twig", [
+           'visites' => $visites
+       ]);
+   }
 }
