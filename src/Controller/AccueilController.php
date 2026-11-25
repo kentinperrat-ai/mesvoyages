@@ -34,7 +34,10 @@ class AccueilController extends AbstractController {
 
     #[Route('/', name: 'accueil')]
     public function index(): Response {
-        return $this->render("pages/accueil.html.twig");
+        $visites = $this->repository->findLastTwo();
+        return $this->render("pages/accueil.html.twig", [
+            'visites' => $visites
+        ]);
     }
 
     #[Route('/voyages', name: 'voyages')]

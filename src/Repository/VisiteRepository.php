@@ -26,30 +26,41 @@ class VisiteRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-    
+
     /**
-     * 
      * @param type $champ
      * @param type $valeur
      * @return Visite[]
      */
-    public function findByEqualValue($champ, $valeur) : array {
-        if($valeur==""){
+    public function findByEqualValue($champ, $valeur): array {
+        if ($valeur == "") {
             return $this->createQueryBuilder('v')
-                    ->orderBy('v.'.$champ, 'ASC')
-                    ->getQuery()
-                    ->getResult();
-        
-        }else{
+                ->orderBy('v.'.$champ, 'ASC')
+                ->getQuery()
+                ->getResult();
+        } else {
             return $this->createQueryBuilder('v')
-              ->where('v.'.$champ.'=:valeur')
-              ->setParameter('valeur', $valeur)
-              ->orderBy('v.datecreation', 'DESC')
-              ->getQuery() 
-              ->getResult();
-            
+                ->where('v.'.$champ.'=:valeur')
+                ->setParameter('valeur', $valeur)
+                ->orderBy('v.datecreation', 'DESC')
+                ->getQuery()
+                ->getResult();
         }
     }
+
+    /**
+     * Retourne les 2 visites les plus récentes
+     * @return Visite[]
+     */
+    public function findLastTwo(): array
+    {
+        return $this->createQueryBuilder('v')
+            ->orderBy('v.datecreation', 'DESC')
+            ->setMaxResults(2)
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * Supprime une visite
      * @param Visite $visite
@@ -60,45 +71,15 @@ class VisiteRepository extends ServiceEntityRepository
         $this->getEntityManager()->remove($visite);
         $this->getEntityManager()->flush();
     }
-    
+
     /**
- * Ajoute ou modifie une visite
- * @param Visite $visite
- * @return void
- */
+     * Ajoute ou modifie une visite
+     * @param Visite $visite
+     * @return void
+     */
     public function add(Visite $visite): void
-   {
-      $this->getEntityManager()->persist($visite);
-      $this->getEntityManager()->flush();
-   }
-    
-
+    {
+        $this->getEntityManager()->persist($visite);
+        $this->getEntityManager()->flush();
+    }
 }
-                
-
-
-//    /**
-//     * @return Visite[] Returns an array of Visite objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('v')
-//            ->andWhere('v.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('v.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Visite
-//    {
-//        return $this->createQueryBuilder('v')
-//            ->andWhere('v.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
-
